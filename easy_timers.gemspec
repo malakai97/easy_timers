@@ -6,11 +6,11 @@ require 'easy_timers/version'
 Gem::Specification.new do |spec|
   spec.name          = "easy_timers"
   spec.version       = EasyTimers::VERSION
-  spec.authors       = ["TODO: Write your name"]
-  spec.email         = ["TODO: Write your email address"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.authors       = ["Bryan Hockey"]
+  spec.email         = ["bhock@umich.edu"]
+  spec.summary       = %q{Easily create and manage asynchronous timers using dates or durations.}
+  spec.description   = %q{Easily create and manage asynchronous timers using dates or durations.}
+  spec.homepage      = "http://github.com/malakai97/easy_timers"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
