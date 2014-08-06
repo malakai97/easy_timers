@@ -36,7 +36,7 @@ You can also supply a ruby DateTime object instead of an interval.
 
 ```ruby
 the_far_future = DateTime.parse('2027-01-01')
-timers.after(the_far_future) { put "We've had great uptime."
+timers.after(the_far_future) { put "We've had great uptime." }
 ```
 
 If you want to be able to cancel a specific timer, you should give it a name:
@@ -61,7 +61,7 @@ timer_name = timers.every(1) { puts "One second has passed." }
 ```
 
 Periodic timers will continue as long as their block returns true.  This can be used to stop a period timer
-once some condition has been met.
+once some condition has been met, or you can cancel them with as before.
 
 ## Contributing
 
