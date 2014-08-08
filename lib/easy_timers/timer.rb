@@ -2,7 +2,8 @@ module EasyTimers
 
   # Wraps a timer
   class Timer
-    attr_reader :time, :name, :interval, :recurring, :callback
+    attr_reader :time, :name, :interval, :recurring, :granularity, :callback
+    attr_writer :time
 
     # Create a new instance
     # @param time [Float]

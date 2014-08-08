@@ -9,7 +9,7 @@ module EasyTimers
 
     # Create a new instance and begin the loop
     def initialize
-      @handles = []
+      @events = []
       @names = Hash.new do |hash,key|
         hash[key] = []
       end
@@ -24,26 +24,17 @@ module EasyTimers
     # Insert a new timer_command into the group
     # @param timer [Timer]
     def insert(timer)
-      if timer.granularity != GRANULARITY
-        time = timer.time * (GRANULARITY / timer.granularity)
-        interval = timer.interval * (GRANULARITY / timer.granularity)
+      time = self.get_current_time + (timer.time * (GRANULARITY / timer.granularity))
+      interval = timer.interval * (GRANULARITY / timer.granularity)
+
+      normalizedTimer = timer.new(time, timer.name, interval, timer.recurring, GRANULARITY, timer.callback)
+
+      index = @events.index do |element|
+        normalizedTimer.time <= element.time
       end
 
-      time =  self.get_current_time + (timer.interval * self.granularity)
-      interval = timer.interval * self.granularity
-      handle = #Handle.new(time, name, interval, recurring, callback)
-      self.insert_handle(handle)
-    end
-
-
-    # Insert a handle into the group
-    def insert_handle(handle)
-      index = @handles.index do |element|
-        handle.time <= element.time
-      end
-
-      @handles.insert(index, handle)
-      @names[handle.name] = handle
+      @events.insert(index, normalizedTimer)
+      @names[normalizedTimer.name] = normalizedTimer
       @looping_thread.run()
     end
 
@@ -52,22 +43,23 @@ module EasyTimers
     def loop()
       time = self.get_current_time()
 
-      while @handles.first.time <= time
-        handle = @handles.pop
+      while @events.first.time <= time
+        timer = @events.pop
         Thread.new do
-          result = handle.callback.call
-          if result && handle.recurring
-            handle.time = handle.time + handle.interval
-            self.insert_handle(handle)
+          result = timer.callback.call
+          if result && timer.recurring
+            newTime = timer.time + timer.interval
+            newTimer = Timer.new(newTime, timer.name, timer.interval, timer.recurring, timer.granularity, timer.callback)
+            self.insert(newTimer)
           end
         end
       end
 
-      duration = @handles.first.time - time
-      if duration < 0
-        duration = 0
+      untilNext = @events.first.time - time
+      if untilNext < 0
+        untilNext = 0
       end
-      sleep duration
+      sleep untilNext
     end
 
 
