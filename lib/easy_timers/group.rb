@@ -1,34 +1,18 @@
-require 'easy_timers/timer_command'
+require 'easy_timers/timer'
 
 module EasyTimers
 
   # Maintains a list of timers.
   class Group
 
-    # Wraps the callback and all the scheduling information.
-    class Handle
-      attr_reader :time, :interval, :recurring, :callback
-      attr_writer :time
-
-      # Create a new handle
-      # @param time [Float]
-      # @param interval [Float]
-      # @param recurring [Boolean]
-      # @param callback [Callable]
-      def initialize(time, interval, recurring, callback)
-        @time = time
-        @interval = interval
-        @recurring = recurring
-        @callback = callback
-      end
-    end
-
-    attr_reader :granularity
+    GRANULARITY = 1000 # milliseconds
 
     # Create a new instance and begin the loop
     def initialize
-      @granularity = 1000 #milliseconds
       @handles = []
+      @names = Hash.new do |hash,key|
+        hash[key] = []
+      end
       @looping_thread = Thread.new() do
         while true
           self.loop()
@@ -38,11 +22,17 @@ module EasyTimers
 
 
     # Insert a new timer_command into the group
-    # @param timer_command [timer_command]
-    def insert(timer_command)
-      time =  self.get_current_time + (timer_command.interval * self.granularity)
-      handle = Handle.new(time, timer_command.interval * self.granularity, timer_command.recurring, timer_command.callback)
-      self.insert(handle)
+    # @param timer [Timer]
+    def insert(timer)
+      if timer.granularity != GRANULARITY
+        time = timer.time * (GRANULARITY / timer.granularity)
+        interval = timer.interval * (GRANULARITY / timer.granularity)
+      end
+
+      time =  self.get_current_time + (timer.interval * self.granularity)
+      interval = timer.interval * self.granularity
+      handle = #Handle.new(time, name, interval, recurring, callback)
+      self.insert_handle(handle)
     end
 
 
@@ -53,6 +43,7 @@ module EasyTimers
       end
 
       @handles.insert(index, handle)
+      @names[handle.name] = handle
       @looping_thread.run()
     end
 
@@ -67,7 +58,7 @@ module EasyTimers
           result = handle.callback.call
           if result && handle.recurring
             handle.time = handle.time + handle.interval
-            self.insert(handle)
+            self.insert_handle(handle)
           end
         end
       end
