@@ -3,7 +3,6 @@ module EasyTimers
   # Wraps a timer
   class Timer
     attr_reader :time, :name, :interval, :recurring, :granularity, :callback
-    attr_writer :time
 
     # Create a new instance
     # @param time [Float]
@@ -18,6 +17,20 @@ module EasyTimers
       @recurring = recurring
       @granularity = granularity
       @callback = callback
+      @cancelled = false
+    end
+
+
+    # Cancel the timer by overwriting the callback
+    def cancel()
+      @callback = Proc.new()
+      @cancelled = true
+    end
+
+
+    # Check if this timer has been cancelled.
+    def cancelled?
+      return @cancelled
     end
 
   end
