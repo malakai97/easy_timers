@@ -93,6 +93,12 @@ module EasyTimers
     end
 
 
+    # Cancel a timer.
+    def cancel(name)
+      @group.delete(name)
+    end
+
+
     protected
       # Schedule a block to be called after the given number of seconds.
       # @param seconds [Float] Number of seconds to wait before firing.
