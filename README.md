@@ -32,19 +32,19 @@ timers.after(10) { puts "Hello world" }
 
 Now `timers` has a single timer that will call its block in ten seconds.
 
-You can also supply a ruby DateTime object instead of an interval.
+You can also supply a ruby Time object instead of an interval.
 
 ```ruby
-the_far_future = DateTime.parse('2027-01-01')
-timers.after(the_far_future) { put "We've had great uptime." }
+the_future = Time.now + 10
+timers.after(the_future) { put "Ten seconds have passed." }
 ```
 
 If you want to be able to cancel a specific timer, you should give it a name:
 
 ```ruby
-timers.after('one_minute', 60) { puts "It's been 60 seconds." }
+timers.after(60, :one_minute) { puts "It's been 60 seconds." }
 # do some work and decide to change our mind
-timers.cancel('one_minute')
+timers.cancel(:one_minute)
 ```
 
 If you'd rather not mint your own names, one will be generated for you:
@@ -60,8 +60,16 @@ You can also create periodic timers with `EasyTimers::Timers#every`:
 timer_name = timers.every(1) { puts "One second has passed." }
 ```
 
-Periodic timers will continue as long as their block returns true.  This can be used to stop a period timer
-once some condition has been met, or you can cancel them with as before.
+Periodic timers will be scheduled repeatedly until cancelled.
+
+Need a combination of the above?  You can schedule a period timer to start at
+a certain time, then scheduled repeatedly using a different interval:
+
+```ruby
+timer_name = timers.after_then_every(0.5, 0.1, :my_timer) { puts "tic toc" }
+```
+
+The above timer will first fire after half a second, then fire every 0.1 seconds thereafter.
 
 ## Contributing
 
