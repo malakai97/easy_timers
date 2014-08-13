@@ -24,21 +24,19 @@ module EasyTimers
     # Insert a new timer into the group
     # @param timer [Timer]
     def insert(timer)
-      time = self.get_current_time + (timer.time * (GRANULARITY / timer.granularity))
-      interval = timer.interval * (GRANULARITY / timer.granularity)
-      normalizedTimer = Timer.new(time, timer.name, interval, timer.recurring, GRANULARITY, timer.callback)
-
-      if @events.size == 0
-        index = 0
-      else
-        index = @events.index do |element|
-          normalizedTimer.time > element.time
-        end
+      index = @events.index do |element|
+        timer.time > element.time
       end
 
-      @events.insert(index, normalizedTimer)
-      @names[normalizedTimer.name].push(normalizedTimer)
+      if index == nil
+        @events.push(timer)
+      else
+        @events.insert(index, timer)
+      end
+
+      @names[timer.name].push(timer)
       @looping_thread.run()
+      return timer.name
     end
 
 
@@ -57,34 +55,38 @@ module EasyTimers
 
     # Perform a single loop.
     def loop()
-      time = self.get_current_time()
+      if @events.empty?
+        sleep #until woken
+      else
+        time = self.get_current_time()
 
-      while @events.first.time <= time
-        timer = @events.pop
-        @names[timer.name].pop
-        if timer.cancelled? == false
-          if timer.recurring == true
-            newTime = timer.time + timer.interval
-            newTimer = Timer.new(newTime, timer.name, timer.interval, timer.recurring, timer.granularity, timer.callback)
-            self.insert(newTimer)
-          end
-          Thread.new do
-            timer.callback.call
+        while @events.last.time <= time
+          timer = @events.pop
+          @names[timer.name].pop
+          if timer.cancelled? == false
+            if timer.recurring == true
+              newTime = timer.time + timer.interval
+              newTimer = Timer.new(newTime, timer.name, timer.interval, timer.recurring, timer.callback)
+              self.insert(newTimer)
+            end
+            Thread.new do
+              timer.callback.call
+            end
           end
         end
-      end
 
-      untilNext = @events.first.time - time
-      if untilNext < 0.0
-        untilNext = 0.0
+        untilNext = @events.last.time - time
+        if untilNext < 0.0
+          untilNext = 0.0
+        end
+        sleep untilNext
       end
-      sleep untilNext
     end
 
 
-    # Return the current time in milliseconds.
+    # Return the current time in seconds
     def get_current_time()
-      return  Time.now.gmtime.to_f * GRANULARITY
+      return  Time.now.gmtime.to_f
     end
 
 

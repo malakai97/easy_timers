@@ -1,23 +1,28 @@
+require 'time'
+
 module EasyTimers
 
   # Wraps a timer
   class Timer
-    attr_reader :time, :name, :interval, :recurring, :granularity, :callback
+    attr_reader :time, :name, :interval, :recurring, :callback
 
     # Create a new instance
-    # @param time [Float]
-    # @param name [Symbol]
-    # @param interval [Float]
+    # @param time [Float] Seconds since epoch.
+    # @param name [Symbol] A name for this timer; generated from the current clock time if nil.
+    # @param interval [Float] Seconds.
     # @param recurring [Boolean]
     # @param callback [Callable]
-    def initialize(time, name, interval, recurring, granularity, callback)
+    def initialize(time, name, interval, recurring, callback)
       @time = time
       @name = name
       @interval = interval
       @recurring = recurring
-      @granularity = granularity
       @callback = callback
       @cancelled = false
+
+      if @name == nil
+        @name = Time.now.gmtime.to_f.to_s.to_sym
+      end
     end
 
 
