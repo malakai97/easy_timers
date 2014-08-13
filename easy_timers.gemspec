@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "easy_timers"
   spec.version       = EasyTimers::VERSION
   spec.authors       = ["Bryan Hockey"]
-  spec.email         = ["bhock@umich.edu"]
+  spec.email         = ["bryan.hockey@peimhal.com"]
   spec.summary       = %q{Easily create and manage asynchronous timers using dates or durations.}
   spec.description   = %q{Easily create and manage asynchronous timers using dates or durations.}
   spec.homepage      = "http://github.com/malakai97/easy_timers"
