@@ -1,6 +1,5 @@
 require 'easy_timers/timer'
 require 'easy_timers/group'
-require 'date'
 require 'time'
 
 module EasyTimers
