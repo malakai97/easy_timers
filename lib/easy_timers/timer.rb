@@ -28,7 +28,7 @@ module EasyTimers
 
     # Cancel the timer by overwriting the callback
     def cancel()
-      @callback = Proc.new()
+      @callback = nil
       @cancelled = true
     end
 
