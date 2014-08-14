@@ -113,10 +113,11 @@ describe EasyTimers::Timers do
 
     it 'works with a staggered timer' do
       x = []
-      @timers.every(0.01) { x.push(:a) }
-      @timers.every(0.011) { x.push(:b) }
-      sleep 0.051
-      expect(x).to eq([:a, :b, :a, :b, :a, :b, :a, :b, :a])
+      @timers.every(0.03) { x.push(:a) }
+      sleep 0.01
+      @timers.every(0.03) { x.push(:b) }
+      sleep 0.07
+      expect(x).to eq([:a, :b, :a, :b])
     end
 
     it 'works with a similar timer' do
@@ -143,15 +144,10 @@ describe EasyTimers::Timers do
     it 'fires after seconds then fires again' do
       x = 0
       @timers.after_then_every(0.02, 0.01) { x += 1}
-      sleep 0.005
       expect(x).to eq(0)
-      sleep 0.01
-      expect(x).to eq(0)
-      sleep 0.01
+      sleep 0.025
       expect(x).to eq(1)
-      sleep 0.01
-      expect(x).to eq(2)
-      sleep 0.01
+      sleep 0.02
       expect(x).to eq(3)
     end
 
@@ -167,7 +163,7 @@ describe EasyTimers::Timers do
       x = 0
       @timers.after_then_every(0.02, 0.04) { x += 1 }
       @timers.after_then_every(0.02, 0.04) { x += 1 }
-      sleep 0.065
+      sleep 0.08
       expect(x).to eq(4)
     end
 
