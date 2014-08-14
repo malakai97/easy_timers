@@ -1,7 +1,5 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'easy_timers/version'
+require File.expand_path('../lib/easy_timers/version', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name          = "easy_timers"
