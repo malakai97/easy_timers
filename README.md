@@ -1,5 +1,7 @@
 # EasyTimers
 
+[![Build Status](https://travis-ci.org/malakai97/easy_timers.svg?branch=master)](https://travis-ci.org/malakai97/easy_timers)
+
 A simple interface for creating timers with callbacks that handles all the threading for you.
 
 ## Installation
