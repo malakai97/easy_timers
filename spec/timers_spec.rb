@@ -10,24 +10,24 @@ describe EasyTimers::Timers do
 
     it 'fires at a future time' do
       x = 1
-      time = Time.now + 0.01
+      time = Time.now + 0.1
       @timers.after(time, :test) { x = 5}
       expect(x).to eq(1)
-      sleep 0.012
+      sleep 0.12
       expect(x).to eq(5)
     end
 
     it 'fires multiple times' do
       x = []
       now = Time.now
-      @timers.after(now + 0.06, :a) { x.push(:a) }
-      @timers.after(now + 0.05, :b) { x.push(:b) }
-      @timers.after(now + 0.04, :c) { x.push(:c) }
-      @timers.after(now + 0.03, :d) { x.push(:d) }
-      @timers.after(now + 0.02, :e) { x.push(:e) }
-      @timers.after(now + 0.01, :f) { x.push(:f) }
-      @timers.after(now + 0.025, :g) { x.push(:g) }
-      sleep 0.065
+      @timers.after(now + 0.6, :a) { x.push(:a) }
+      @timers.after(now + 0.5, :b) { x.push(:b) }
+      @timers.after(now + 0.4, :c) { x.push(:c) }
+      @timers.after(now + 0.3, :d) { x.push(:d) }
+      @timers.after(now + 0.2, :e) { x.push(:e) }
+      @timers.after(now + 0.1, :f) { x.push(:f) }
+      @timers.after(now + 0.25, :g) { x.push(:g) }
+      sleep 0.65
       expect(x).to eq([:f, :e, :g, :d, :c, :b, :a])
     end
 
@@ -39,9 +39,9 @@ describe EasyTimers::Timers do
 
     it 'fires immediately when given a time in the past' do
       x = 0
-      time = Time.now - 0.01
+      time = Time.now - 0.1
       @timers.after(time, :test) { x = 5 }
-      sleep 0.005
+      sleep 0.05
       expect(x).to eq(5)
     end
 
@@ -55,24 +55,24 @@ describe EasyTimers::Timers do
 
     it 'fires after an interval' do
       x = 1
-      @timers.after(0.01, :test) do
+      @timers.after(0.1, :test) do
         x = 5
       end
       expect(x).to eq(1)
-      sleep 0.012
+      sleep 0.12
       expect(x).to eq(5)
     end
 
     it 'fires multiple times in succession' do
       x = []
-      @timers.after(0.06, :a) { x.push(:a) }
-      @timers.after(0.05, :b) { x.push(:b) }
-      @timers.after(0.04, :c) { x.push(:c) }
-      @timers.after(0.03, :d) { x.push(:d) }
-      @timers.after(0.02, :e) { x.push(:e) }
-      @timers.after(0.01, :f) { x.push(:f) }
-      @timers.after(0.025, :g) { x.push(:g) }
-      sleep 0.065
+      @timers.after(0.6, :a) { x.push(:a) }
+      @timers.after(0.5, :b) { x.push(:b) }
+      @timers.after(0.4, :c) { x.push(:c) }
+      @timers.after(0.3, :d) { x.push(:d) }
+      @timers.after(0.2, :e) { x.push(:e) }
+      @timers.after(0.1, :f) { x.push(:f) }
+      @timers.after(0.25, :g) { x.push(:g) }
+      sleep 0.65
       expect(x).to eq([:f, :e, :g, :d, :c, :b, :a])
 
     end
@@ -85,8 +85,8 @@ describe EasyTimers::Timers do
 
     it 'fires immediately when given a time in the past' do
       x = 0
-      @timers.after(-0.01, :test) { x = 5 }
-      sleep 0.005
+      @timers.after(-0.1, :test) { x = 5 }
+      sleep 0.1
       expect(x).to eq(5)
     end
 
@@ -100,31 +100,31 @@ describe EasyTimers::Timers do
 
     it 'fires more than once' do
       x = 0
-      @timers.every(0.01) { x += 1}
-      sleep 0.005
+      @timers.every(0.1) { x += 1}
+      sleep 0.05
       expect(x).to eq(0)
-      sleep 0.01
+      sleep 0.1
       expect(x).to eq(1)
-      sleep 0.01
+      sleep 0.1
       expect(x).to eq(2)
-      sleep 0.01
+      sleep 0.1
       expect(x).to eq(3)
     end
 
     it 'works with a staggered timer' do
       x = []
-      @timers.every(0.03) { x.push(:a) }
-      sleep 0.01
-      @timers.every(0.03) { x.push(:b) }
-      sleep 0.07
+      @timers.every(0.3) { x.push(:a) }
+      sleep 0.1
+      @timers.every(0.3) { x.push(:b) }
+      sleep 0.7
       expect(x).to eq([:a, :b, :a, :b])
     end
 
     it 'works with a similar timer' do
       x = 0
-      @timers.every(0.01) { x += 1 }
-      @timers.every(0.01) { x += 1 }
-      sleep 0.041
+      @timers.every(0.1) { x += 1 }
+      @timers.every(0.1) { x += 1 }
+      sleep 0.45
       expect(x).to eq(8)
     end
 
@@ -143,33 +143,33 @@ describe EasyTimers::Timers do
 
     it 'fires after seconds then fires again' do
       x = 0
-      @timers.after_then_every(0.02, 0.01) { x += 1}
+      @timers.after_then_every(0.2, 0.1) { x += 1}
       expect(x).to eq(0)
-      sleep 0.025
+      sleep 0.25
       expect(x).to eq(1)
-      sleep 0.02
+      sleep 0.2
       expect(x).to eq(3)
     end
 
     it 'works with a staggered timer' do
       x = []
-      @timers.after_then_every(0.02, 0.01) { x.push(:a) }
-      @timers.after_then_every(0.025, 0.01) { x.push(:b) }
-      sleep 0.058
+      @timers.after_then_every(0.2, 0.1) { x.push(:a) }
+      @timers.after_then_every(0.25, 0.1) { x.push(:b) }
+      sleep 0.58
       expect(x).to eq([:a, :b, :a, :b, :a, :b, :a, :b])
     end
 
     it 'works with a similar timer' do
       x = 0
-      @timers.after_then_every(0.02, 0.04) { x += 1 }
-      @timers.after_then_every(0.02, 0.04) { x += 1 }
-      sleep 0.08
+      @timers.after_then_every(0.2, 0.4) { x += 1 }
+      @timers.after_then_every(0.2, 0.4) { x += 1 }
+      sleep 0.8
       expect(x).to eq(4)
     end
 
     it 'generates a custom name' do
       name = nil
-      name = @timers.after_then_every(0.01, 0.01) { true }
+      name = @timers.after_then_every(0.1, 0.1) { true }
       expect(name).to_not eq(nil)
     end
   end
@@ -181,7 +181,7 @@ describe EasyTimers::Timers do
 
     it 'deletes an #after timer' do
       x = 0
-      @timers.after(0.01, :test) { x += 1 }
+      @timers.after(0.1, :test) { x += 1 }
       @timers.cancel(:test)
       sleep 0.15
       expect(x).to eq(0)
@@ -189,17 +189,17 @@ describe EasyTimers::Timers do
 
     it 'deletes an #every timer after it has fired' do
       x = 0
-      @timers.every(0.01, :test) { x += 1 }
-      sleep 0.025
+      @timers.every(0.1, :test) { x += 1 }
+      sleep 0.25
       @timers.cancel(:test)
-      sleep 0.01
+      sleep 0.1
       expect(x).to eq(2)
     end
 
     it 'fails gracefully if the timer is past' do
       x = 0
-      @timers.after(0.01, :test) { x += 1 }
-      sleep 0.015
+      @timers.after(0.1, :test) { x += 1 }
+      sleep 0.15
       @timers.cancel(:test)
     end
 
@@ -209,7 +209,7 @@ describe EasyTimers::Timers do
 
     it 'works with generated names' do
       x = 0
-      name = @timers.after(0.01) { x += 1 }
+      name = @timers.after(0.1) { x += 1 }
       @timers.cancel(name)
       sleep 0.15
       expect(x).to eq(0)
