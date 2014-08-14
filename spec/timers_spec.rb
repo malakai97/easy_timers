@@ -39,9 +39,9 @@ describe EasyTimers::Timers do
 
     it 'fires immediately when given a time in the past' do
       x = 0
-      time = Time.now - 0.1
+      time = Time.now - 1
       @timers.after(time, :test) { x = 5 }
-      sleep 0.05
+      sleep 0.1
       expect(x).to eq(5)
     end
 
@@ -85,7 +85,7 @@ describe EasyTimers::Timers do
 
     it 'fires immediately when given a time in the past' do
       x = 0
-      @timers.after(-0.1, :test) { x = 5 }
+      @timers.after(-1, :test) { x = 5 }
       sleep 0.1
       expect(x).to eq(5)
     end
@@ -100,14 +100,9 @@ describe EasyTimers::Timers do
 
     it 'fires more than once' do
       x = 0
-      @timers.every(0.1) { x += 1}
-      sleep 0.05
+      @timers.every(0.2) { x += 1}
       expect(x).to eq(0)
-      sleep 0.1
-      expect(x).to eq(1)
-      sleep 0.1
-      expect(x).to eq(2)
-      sleep 0.1
+      sleep 0.7
       expect(x).to eq(3)
     end
 
@@ -136,6 +131,7 @@ describe EasyTimers::Timers do
 
   end
 
+
   describe '#after_then_every(start_seconds, interval, name = nil, &block)' do
     before(:each) do
       @timers = EasyTimers::Timers.new()
@@ -153,10 +149,10 @@ describe EasyTimers::Timers do
 
     it 'works with a staggered timer' do
       x = []
-      @timers.after_then_every(0.2, 0.1) { x.push(:a) }
-      @timers.after_then_every(0.25, 0.1) { x.push(:b) }
-      sleep 0.58
-      expect(x).to eq([:a, :b, :a, :b, :a, :b, :a, :b])
+      @timers.after_then_every(0.2, 0.3) { x.push(:a) }
+      @timers.after_then_every(0.3, 0.3) { x.push(:b) }
+      sleep 0.7
+      expect(x).to eq([:a, :b, :a, :b])
     end
 
     it 'works with a similar timer' do
@@ -173,6 +169,7 @@ describe EasyTimers::Timers do
       expect(name).to_not eq(nil)
     end
   end
+
 
   describe '#cancel' do
     before(:each) do
