@@ -1,3 +1,6 @@
+This project is no longer maintained. You probably should not use it; you certainly shouldn't use
+it if you require precise timing. If anyone would like to take over ownership, drop me a line.
+
 # EasyTimers
 
 [![Build Status](https://travis-ci.org/malakai97/easy_timers.svg?branch=master)](https://travis-ci.org/malakai97/easy_timers)
